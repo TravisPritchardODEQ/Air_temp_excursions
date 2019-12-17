@@ -44,10 +44,10 @@ Air_temp_checker <- Air_temp_raw %>%
   mutate(exclude_excursion = ifelse(calc7ma == 1, rollmax(AT_excursion, k= 7, align = 'right', fill = NA), 0),
          TMAX_7d = ifelse(calc7ma == 1 ,rollmax(TMAX, k= 7, align = 'right', fill = NA), NA),
          note =ifelse(calc7ma == 1, "", "missing air tempeature values in period" )) %>%
-  rename(AT_percent_critical = critical.percentage) %>%
+  rename(per_complete = critical.percentage) %>%
   select(STATION,
          NAME,
-         AT_percent_critical,
+         per_complete,
          DATE,
          TMAX,
          TMAX_7d,
