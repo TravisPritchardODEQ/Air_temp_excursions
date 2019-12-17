@@ -30,22 +30,30 @@ per90_values <- read.csv('data/90thpercentilevalues.csv', stringsAsFactors = FAL
 
 
 Air_temp_raw <- Air_temp %>%
-  left_join(select(per90_values, STATION, per90)) %>%
+  filter(!is.na(TMAX)) %>%
+  left_join(select(per90_values, STATION, per90, critical.percentage)) %>%
   mutate(AT_excursion = ifelse(TMAX > per90 , 1, 0 ))
 
 Air_temp_checker <- Air_temp_raw %>%
-  mutate(AT_excursion = ifelse(is.na(AT_excursion), 0, AT_excursion )) %>%
-  group_by(STATION) %>%
-  mutate(exclude_excursion = rollmax(AT_excursion, k= 7, align = 'right', fill = NA),
-         TMAX_7d = rollmax(TMAX, k= 7, align = 'right', fill = NA),
+  mutate(AT_excursion = ifelse(is.na(AT_excursion), 0, AT_excursion ),
          DATE = mdy(DATE)) %>%
+  arrange(STATION, DATE) %>%
+  group_by(STATION) %>%
+  mutate(startdate7 = lag(DATE, 6, order_by = DATE),
+         calc7ma = ifelse(startdate7 == (as.Date(DATE) - 6), 1, 0 )) %>%
+  mutate(exclude_excursion = ifelse(calc7ma == 1, rollmax(AT_excursion, k= 7, align = 'right', fill = NA), 0),
+         TMAX_7d = ifelse(calc7ma == 1 ,rollmax(TMAX, k= 7, align = 'right', fill = NA), NA),
+         note =ifelse(calc7ma == 1, "", "missing air tempeature values in period" )) %>%
+  rename(AT_percent_critical = critical.percentage) %>%
   select(STATION,
          NAME,
+         AT_percent_critical,
          DATE,
          TMAX,
          TMAX_7d,
          per90,
-         exclude_excursion)
+         exclude_excursion,
+         note)
 
 
 save(Air_temp_checker, file = 'data/Air_temp_checker.Rdata')
