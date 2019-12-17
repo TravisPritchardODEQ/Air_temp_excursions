@@ -41,7 +41,7 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      dataTableOutput('tbl')
+      DT::dataTableOutput('tbl')
     )
   )
 )
@@ -58,7 +58,7 @@ server <- function(input, output) {
   })
   
   
-  output$tbl <- renderDataTable({
+  output$tbl <- DT::renderDataTable({
     
     table_Data()
     
