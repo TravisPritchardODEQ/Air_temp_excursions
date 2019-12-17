@@ -7,6 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 
+library(tidyverse)
 library(shiny)
 library(shinyWidgets)
 

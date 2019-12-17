@@ -53,7 +53,8 @@ Air_temp_checker <- Air_temp_raw %>%
          TMAX_7d,
          per90,
          exclude_excursion,
-         note)
+         note) %>%
+  ungroup()
 
 
 save(Air_temp_checker, file = 'data/Air_temp_checker.Rdata')
