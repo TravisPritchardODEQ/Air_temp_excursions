@@ -1,5 +1,6 @@
 library(tidyverse)
 library(zoo)
+library(lubridate)
 
 
 # read air temp stations
@@ -35,7 +36,8 @@ Air_temp_raw <- Air_temp %>%
 Air_temp_checker <- Air_temp_raw %>%
   mutate(AT_excursion = ifelse(is.na(AT_excursion), 0, AT_excursion )) %>%
   group_by(STATION) %>%
-  mutate(AT_7d_excursion = rollmax(AT_excursion, k= 7, align = 'right', fill = NA))
+  mutate(AT_7d_excursion = rollmax(AT_excursion, k= 7, align = 'right', fill = NA),
+         DATE = mdy(DATE))
 
 
 save(Air_temp_checker, file = 'data/Air_temp_checker.Rdata')
