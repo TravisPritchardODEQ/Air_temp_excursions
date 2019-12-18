@@ -10,41 +10,34 @@
 library(tidyverse)
 library(shiny)
 library(shinyWidgets)
+library(shinydashboard)
 
 
 load('data/Air_temp_checker.Rdata')
 station_names = sort(unique(Air_temp_checker$STATION))
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
+ui <- dashboardPage(
+  dashboardHeader(title = "Air Temperature Exclusion"),
   
-  # Application title
-  titlePanel("Air Temperature Exclusion"),
+  dashboardSidebar( selectizeInput("Air_Stations",
+                                   "Select Air Station",
+                                   choices = station_names,
+                                   multiple = FALSE,
+  ),
+  airDatepickerInput(
+    inputId = "date_select",
+    label = "Select multiple dates:",
+    placeholder = "You can pick 20 dates",
+    view  = 'years',
+    multiple = 20, clearButton = TRUE
+  ),
   
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-      selectizeInput("Air_Stations",
-                     "Select Air Station",
-                     choices = station_names,
-                     multiple = FALSE,
-                     ),
-      airDatepickerInput(
-        inputId = "date_select",
-        label = "Select multiple dates:",
-        placeholder = "You can pick 20 dates",
-        view  = 'years',
-        multiple = 20, clearButton = TRUE
-      ),
-      actionButton("go", "Filter",  icon("filter")),
-      width = 2
-    ),
-    
-    # Show a plot of the generated distribution
-    mainPanel(
-      DT::dataTableOutput('tbl')
-    )
-  )
+  actionButton("go", "Filter",  icon("filter"))
+  ),
+  
+  dashboardBody(DT::dataTableOutput('tbl'))
+  
 )
 
 # Define server logic required to draw a histogram
