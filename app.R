@@ -59,11 +59,12 @@ server <- function(input, output) {
   })
   
   
-  output$tbl <- DT::renderDataTable({
+  output$tbl <- DT::renderDT(
     
-    table_Data()
+    table_Data(),rownames = FALSE,
+    class = 'display nowrap'
     
-  }
+  
     
   )
 
