@@ -36,7 +36,8 @@ ui <- fluidPage(
         view  = 'years',
         multiple = 20, clearButton = TRUE
       ),
-      actionButton("go", "Filter",  icon("filter"))
+      actionButton("go", "Filter",  icon("filter")),
+      width = 2
     ),
     
     # Show a plot of the generated distribution
