@@ -18,7 +18,8 @@ station_names = sort(unique(Air_temp_checker$STATION))
 
 # Define UI for application that draws a histogram
 ui <- dashboardPage(
-  dashboardHeader(title = "Air Temperature Exclusion"),
+  dashboardHeader(title = "Air Temperature Exclusion",
+                  titleWidth = 275),
   
   dashboardSidebar( selectizeInput("Air_Stations",
                                    "Select Air Station",
@@ -55,7 +56,8 @@ server <- function(input, output) {
   output$tbl <- DT::renderDT(
     
     table_Data(),rownames = FALSE,
-    class = 'display nowrap'
+    class = 'display nowrap',
+    options = list(paging = FALSE)
     
   
     
