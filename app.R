@@ -28,16 +28,18 @@ ui <- dashboardPage(
   ),
   airDatepickerInput(
     inputId = "date_select",
-    label = "Select multiple dates:",
-    placeholder = "You can pick 20 dates",
+    label = "Select multiple water temp excursion dates:",
+    placeholder = "You can pick 5000 dates",
     view  = 'years',
-    multiple = 20, clearButton = TRUE
+    multiple = 5000, clearButton = TRUE
   ),
   
   actionButton("go", "Filter",  icon("filter"))
   ),
   
-  dashboardBody(DT::dataTableOutput('tbl'))
+  dashboardBody(
+    textOutput('txt'),
+    DT::dataTableOutput('tbl'))
   
 )
 
@@ -62,6 +64,11 @@ server <- function(input, output) {
   
     
   )
+  
+  output$txt <- renderText({
+    paste("There are ", nrow(table_Data()) - sum(table_Data()$exclude_excursion), "valid water temp excursions.")
+    
+  })
 
 }
 
